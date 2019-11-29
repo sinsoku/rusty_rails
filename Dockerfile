@@ -55,6 +55,8 @@ COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY --from=builder /builder/public/assets ./public/assets
 COPY --from=builder /builder/public/packs ./public/packs
 
+RUN SECRET_KEY_BASE=dummy bin/rails db:setup
+
 ENV PORT 3000
 EXPOSE 3000
 

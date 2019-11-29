@@ -1,24 +1,16 @@
-# README
+This app is a sample that uses [wasabi](https://github.com/sinsoku/wasabi) which is a Rust-based Ruby extension.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Build a docker image
 
-Things you may want to cover:
+```
+$ docker build -t rusty_rails .
+```
 
-* Ruby version
+# Usage
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+$ docker run --rm --env SECRET_KEY_BASE=dummy rusty_rails bin/rails r 'pp Wasabi.sum(1, 2)'
+3
+$ docker run --rm --env SECRET_KEY_BASE=dummy rusty_rails bin/rails r 'pp Wasabi.call_to_s(1)'
+"1"
+```
