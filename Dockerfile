@@ -1,7 +1,15 @@
-# == builder
-FROM ruby:2.6-alpine as builder
+# == base
+FROM ruby:2.6-alpine as base
 
 ENV RAILS_ENV production
+
+# Update rubygems
+RUN gem update --system
+RUN gem update bundler --pre
+
+# == builder
+FROM base
+
 WORKDIR /builder
 
 # Install packages
@@ -14,10 +22,6 @@ RUN apk add --no-cache \
       git \
       cargo
 
-# Update rubygems
-RUN gem update --system
-RUN gem update bundler --pre
-
 # Install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --without development:test -j4
@@ -27,14 +31,12 @@ COPY package.json yarn.lock ./
 RUN yarn install --production --ignore-engines
 
 # Compile assets
-ENV SECRET_KEY_BASE=dummy
 COPY . ./
-RUN bin/rails assets:precompile
+RUN SECRET_KEY_BASE=dummy bin/rails assets:precompile
 
 # == main
-FROM ruby:2.6-alpine
+FROM base
 
-ENV RAILS_ENV production
 WORKDIR /app
 
 # Instal packages
@@ -42,10 +44,6 @@ RUN apk add --no-cache \
       nodejs \
       sqlite-dev \
       tzdata
-
-# Update rubygems
-RUN gem update --system
-RUN gem update bundler --pre
 
 # Copy source files
 COPY . ./
