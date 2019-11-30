@@ -6,6 +6,7 @@ ENV RAILS_ENV production
 # Update rubygems
 RUN gem update --system
 RUN gem update bundler --pre
+RUN bundle config set without development:test
 
 # == builder
 FROM base
@@ -24,7 +25,7 @@ RUN apk add --no-cache \
 
 # Install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --without development:test -j4
+RUN bundle install -j4
 
 # Install npm packages
 COPY package.json yarn.lock ./
