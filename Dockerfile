@@ -9,7 +9,7 @@ RUN gem update bundler --pre
 RUN bundle config set without development:test
 
 # == builder
-FROM base
+FROM base as builder
 
 WORKDIR /builder
 
